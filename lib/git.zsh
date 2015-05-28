@@ -77,7 +77,11 @@ function git_prompt_long_sha() {
 # Get the status of the working tree
 git_prompt_status() {
   INDEX=$(command git status --porcelain -b 2> /dev/null)
+  SUBMODULE=$(command git submodule status 2> /dev/null | grep -v '^ ')
   STATUS=""
+  if [[ -n "$SUBMODULE" ]]; then
+    STATUS="$ZSH_THEME_GIT_PROMPT_SUBMODULE$STATUS"
+  fi
   if $(echo "$INDEX" | command grep -E '^\?\? ' &> /dev/null); then
     STATUS="$ZSH_THEME_GIT_PROMPT_UNTRACKED$STATUS"
   fi
